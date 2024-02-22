@@ -7,4 +7,5 @@ urlpatterns = [
     path('all/<int:todo_id>',views.todo_detail),
     path('all/cbv',views.todos_ApiView.as_view()),
     path('all/mixin',views.Todos_mixin.as_view()),
+    path('all/mixin/<pk>',views.Todo_mixin.as_view()),
 ]

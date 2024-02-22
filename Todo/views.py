@@ -45,6 +45,18 @@ class Todos_mixin(mixins.ListModelMixin,mixins.CreateModelMixin,generics.Generic
     
     def post(self,request:Request):
         return self.create(request)
+    
+
+class Todo_mixin(mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins.DestroyModelMixin,generics.GenericAPIView):
+    queryset=Todo_model.objects.order_by('priority').all()
+    serializer_class=Todo_serializer
+
+    def get(self,request:Request,pk):
+        return self.retrieve(request)
+    def put(self,request:Request,pk):
+        return self.update(request)
+    def delete(self,request:Request,pk):
+        return self.destroy(request)
         
 
 @api_view(['GET','PUT','DELETE'])
