@@ -47,6 +47,10 @@ class Todos_mixin(mixins.ListModelMixin,mixins.CreateModelMixin,generics.Generic
         return self.create(request)
     
 
+class Todos_generics(generics.ListCreateAPIView):
+    queryset=Todo_model.objects.order_by('priority').all()
+    serializer_class=Todo_serializer
+
 class Todo_mixin(mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins.DestroyModelMixin,generics.GenericAPIView):
     queryset=Todo_model.objects.order_by('priority').all()
     serializer_class=Todo_serializer
