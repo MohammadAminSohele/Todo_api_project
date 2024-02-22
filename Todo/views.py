@@ -62,6 +62,9 @@ class Todo_mixin(mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins.Destro
     def delete(self,request:Request,pk):
         return self.destroy(request)
         
+class Todo_generics(generics.RetrieveDestroyAPIView):
+    queryset=Todo_model.objects.order_by('priority').all()
+    serializer_class=Todo_serializer
 
 @api_view(['GET','PUT','DELETE'])
 def todo_detail(request:Request,todo_id):
