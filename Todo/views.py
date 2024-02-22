@@ -4,6 +4,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 
 from .models import Todo_model
 from .serializer import Todo_serializer
@@ -22,6 +23,18 @@ def all_todos(request:Request):
             Todo_deserialize.save()
             return Response(data=Todo_deserialize.data,status=status.HTTP_201_CREATED)
     return Response(data=None,status=status.HTTP_400_BAD_REQUEST)
+
+class todos_ApiView(APIView):
+    def get(self,request:Request):
+        all_todos_query=Todo_model.objects.order_by('priority').all()
+        instance_all_todos_query=Todo_serializer(instance=all_todos_query,many=True)
+        return Response(instance_all_todos_query.data,status=status.HTTP_200_OK)
+    def post(self,request:Request):
+        data_todo=Todo_serializer(data=request.data)
+        if data_todo.is_valid():
+            data_todo.save()
+            return Response(data=data_todo.data,status=status.HTTP_201_CREATED)
+        
 
 @api_view(['GET','PUT','DELETE'])
 def todo_detail(request:Request,todo_id):
