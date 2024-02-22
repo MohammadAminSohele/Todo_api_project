@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
+from rest_framework import mixins,generics
 
 from .models import Todo_model
 from .serializer import Todo_serializer
@@ -34,6 +35,16 @@ class todos_ApiView(APIView):
         if data_todo.is_valid():
             data_todo.save()
             return Response(data=data_todo.data,status=status.HTTP_201_CREATED)
+        
+class Todos_mixin(mixins.ListModelMixin,mixins.CreateModelMixin,generics.GenericAPIView):
+    queryset=Todo_model.objects.order_by('priority').all()
+    serializer_class=Todo_serializer    
+
+    def get(self,request:Request):
+        return self.list(request)
+    
+    def post(self,request:Request):
+        return self.create(request)
         
 
 @api_view(['GET','PUT','DELETE'])
