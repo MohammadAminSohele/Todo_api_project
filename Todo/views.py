@@ -6,6 +6,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework import mixins,generics
+from rest_framework import viewsets
+from rest_framework.pagination import LimitOffsetPagination
 
 from .models import Todo_model
 from .serializer import Todo_serializer
@@ -84,3 +86,7 @@ def todo_detail(request:Request,todo_id):
     elif request.method=='DELETE':
         todo_query.delete()
         return Response(data=None,status=status.HTTP_204_NO_CONTENT)
+     
+class TodoViewsetApiView(viewsets.ModelViewSet):
+    queryset=Todo_model.objects.order_by('priority').all()
+    serializer_class=Todo_serializer
