@@ -22,3 +22,22 @@ def all_todos(request:Request):
             Todo_deserialize.save()
             return Response(data=Todo_deserialize.data,status=status.HTTP_201_CREATED)
     return Response(data=None,status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET','PUT','DELETE'])
+def todo_detail(request:Request,todo_id):
+    try:
+        todo_query=Todo_model.objects.get(pk=todo_id)
+    except Todo_model.DoesNotExist:
+        return Response(None,status=status.HTTP_404_NOT_FOUND)
+    if request.method=='GET':
+        todo_serialize=Todo_serializer(instance=todo_query)
+        return Response(data=todo_serialize.data,status=status.HTTP_202_ACCEPTED)
+    elif request.method=='PUT':
+        todo_edit=Todo_serializer(instance=todo_query,data=request.data)
+        if todo_edit.is_valid():
+            todo_edit.save()
+            return Response(data=todo_edit.data,status=status.HTTP_202_ACCEPTED)
+        return Response(None,status.HTTP_400_BAD_REQUEST)
+    elif request.method=='DELETE':
+        todo_query.delete()
+        return Response(data=None,status=status.HTTP_204_NO_CONTENT)
