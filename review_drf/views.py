@@ -43,3 +43,14 @@ def taskUpdate(request:Request,pk):
             edit_task.save()
             return Response(data=edit_task.data,status=status.HTTP_202_ACCEPTED)
         return Response(data=None,status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+def taskDelete(request:Request,pk):
+    try:
+        task_query=Task_model.objects.get(id=pk)
+    except Task_model.DoesNotExist:
+        return Response(data=None,status=status.HTTP_404_NOT_FOUND)
+    if request.method=='DELETE':
+        task_query.delete()
+        return Response(data=None,status=status.HTTP_204_NO_CONTENT)
+    return Response(data=None,status=status.HTTP_400_BAD_REQUEST)
