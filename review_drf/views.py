@@ -15,3 +15,9 @@ def taskList(request:Request):
     tasks_query=Task_model.objects.order_by('priority').all()
     tasks_serializer=Task_serializer(instance=tasks_query,many=True)
     return Response(data=tasks_serializer.data,status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def taskDetail(request:Request,pk):
+    task_query=Task_model.objects.get(id=pk)
+    task_serializer=Task_serializer(instance=task_query)
+    return Response(data=task_serializer.data,status=status.HTTP_200_OK)
